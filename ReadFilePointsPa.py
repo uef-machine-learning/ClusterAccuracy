@@ -1,4 +1,5 @@
 import numpy as np
+import re
 
 """Read 2D points file .txt
 
@@ -57,19 +58,18 @@ Data Format: List of parition label [.,.,.,...]
 
 """
 def readFilePa(filename):
-    with open(filename, "r+") as file:
-        # Reading form a file
-        listPartitionLabel = []
-        firstLineBool = False
-        for line in file:
-            if firstLineBool:
-                listPartitionLabel.append(int(line.rstrip()))
-            if '-' in line:
-                firstLineBool = True
-    return listPartitionLabel
+    text_file = open(filename, "r")
+    data = text_file.read()
+    d2 = re.sub(re.compile(".*--\n",re.MULTILINE|re.DOTALL),"",data)
+    X = np.fromstring(d2,dtype=int,sep="\n")
+    minx = min(X)
+    maxx = max(X)
+    for i in range(len(X)):
+        X[i] = X[i] - minx + 1
+    if len(np.unique(X)) != maxx:
+        raise argparse.ArgumentError(None, 'Input labels must be consequtive integers each on its own line.')
+    return X
 
-# "../datasets/S-set/s1-label.pa"
-"../datasets/S-set/s1_data.txt"
 
 """Create an array with data from points file and partition file
 
