@@ -1,5 +1,6 @@
 import numpy as np
 import re
+import argparse
 
 """Read 2D points file .txt
 
@@ -54,20 +55,21 @@ def readCentroidFileTxt(filename):
 
 """Read partition datafile
 
-Data Format: List of parition label [.,.,.,...]
+Data Format: List of parition labels each on its own line [.,.,.,...]
 
 """
 def readFilePa(filename):
     text_file = open(filename, "r")
     data = text_file.read()
-    d2 = re.sub(re.compile(".*--\n",re.MULTILINE|re.DOTALL),"",data)
+    d2 = re.sub(re.compile(".*----[\r\n]",re.MULTILINE|re.DOTALL),"",data)
     X = np.fromstring(d2,dtype=int,sep="\n")
     minx = min(X)
     maxx = max(X)
     for i in range(len(X)):
         X[i] = X[i] - minx + 1
-    if len(np.unique(X)) != maxx:
-        raise argparse.ArgumentError(None, 'Input labels must be consequtive integers each on its own line.')
+
+    if len(np.unique(X)) != (maxx - minx +1):
+        raise argparse.ArgumentError(None, 'The set of unique input labels must be consequtive integers. E.g. either 0,1,2,3 or 2,3,4,5 is ok, but not 0,2,3,4.')
     return X
 
 
