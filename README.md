@@ -19,3 +19,17 @@ B=data/s1_clustering_result.pa
 # Input format
 
 Labels as integers each on its own line. See file data/s1_clustering_result.pa as example. Header can be omitted. 
+
+# Running time benchmark
+
+For matching:
+
+    python3 benchmark.py matching
+
+
+For pairing:
+
+    python3 benchmark.py pairing
+
+
+
